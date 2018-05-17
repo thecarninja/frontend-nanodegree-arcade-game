@@ -1,5 +1,7 @@
 # Arcade Game Project
 
+This is a project based on the game frogger.
+
 ## Table of Contents
 
 * [Instructions](#instructions)
@@ -7,6 +9,9 @@
 * [Contributing](#contributing)
 
 ### Instructions
+Opening index.html in your web browser launches the game.
+
+##### How to play
 (From project overview)
 In this game you have a Player and Enemies (Bugs). 
 1. The goal of the player is to reach the water, without colliding into any one of the enemies. 

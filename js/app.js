@@ -24,6 +24,9 @@ Enemy.prototype.render = function() {
 Enemy.prototype.checkCollision = function() {
     if (player.x >= this.x - 75 && player.x <= (this.x + 85)){
         if (player.y >= this.y - 40 && player.y <= (this.y + 43)) {
+            if (player.win > 0) {
+                player.gameOver();
+            }
             player.backToStart();
         }
      }
@@ -34,6 +37,8 @@ var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.x = 2 * 101;
     this.y = 5 * 83;
+    this.win = 0;
+    this.water = false;
 }
 
 Player.prototype.update = function() {
@@ -44,12 +49,12 @@ Player.prototype.update = function() {
     if (this.x < 0) { this.x = 0; }
     if (this.x > (4 * 101)) { this.x = (4 * 101); }
     
-    if (this.y < 83) {  //win condition 
+    if (this.y < 83 && this.water === false) {  //win condition 
+        this.wins();
         setTimeout(function(){ 
             that.backToStart();
         },  1000);
     }
-        
 };
 
 //Draws player on screen
@@ -67,9 +72,31 @@ Player.prototype.handleInput = function(key) {
 
 //Returns player to the beginning
 Player.prototype.backToStart = function() {
-    player.x = 2 * 101;
-    player.y = 5 * 83;
+    this.x = 2 * 101;
+    this.y = 5 * 83;
+    this.water = false;
 };
+
+// Adds to win counter
+Player.prototype.wins = function() {
+    if (this.water === false) {
+        this.water = true;
+        this.win += 1;
+        this.updateWins();
+    }
+}
+
+// updates wins on index.html
+Player.prototype.updateWins = function() {
+    document.getElementById("totalwins").innerHTML = this.win;
+    document.getElementById("wins").innerHTML = this.win;
+}
+
+// Shows game over screen
+Player.prototype.gameOver = function() {
+    this.updateWins();
+    document.querySelector('.final-score').style.display = "inline-block";
+}
 
 // Instantiating enemies
 var enemyOne = new Enemy;
@@ -96,3 +123,10 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+// This listens for the click on continue on game over screen
+document.querySelector('.continue').addEventListener('click', function() {
+    document.querySelector('.final-score').style.display = "none";
+    player.win = 0;
+    player.updateWins();
+})
